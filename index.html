@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% block content %}
+    <!-- Breaking News Ticker -->
+    <div id="highlights" class="bg-red-700 text-white py-6 overflow-hidden">
+        <div id="ticker-wrapper" class="ticker-wrapper">
+            <span class="ticker-text">BREAKING NEWS: </span>
+            {% for item in headline_articles %}
+                {% for article in item.articles %}
+                    <span class="ticker-item" data-topic="{{ item.topic }}">{{ article.title }} ({{ article.source }}) | </span>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Global Highlights -->
+    <section class="px-4 py-12">
+        <h2 class="section-header">🌍 Today's Global Highlights</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {% for topic in ['India', 'AI', 'Sports', 'Oil Prices', 'Stock Market', 'Climate Change', 'Exchange Rates', 'Country Economy'] %}
+                <div class="card animate-slide-in">
+                    <h3 class="card-title"><i class="fas fa-globe mr-2"></i>{{ topic }}</h3>
+                    {% for item in headline_articles %}
+                        {% if item.topic == topic %}
+                            {% for article in item.articles %}
+                                <p class="card-meta">{{ article.published }} | {{ article.source }}</p>
+                                <a href="{{ article.link }}" target="_blank" class="card-link">{{ article.title }}</a>
+                            {% endfor %}
+                            {% if not item.articles %}
+                                <p class="card-meta">⚠️ No articles found for {{ topic }}.</p>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+    <hr class="divider">
+
+    <!-- User Search -->
+    <section id="search" class="px-4 py-12">
+        <h2 class="section-header">🔍 Search News by Topic</h2>
+        <form method="POST" class="mb-12 relative">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div class="relative">
+                    <input type="text" name="query" value="{{ query }}" placeholder="Enter a topic" class="input-field">
+                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-red-700"></i>
+                </div>
+                <select name="region" class="input-field">
+                    {% for region in regions %}
+                        <option value="{{ region }}" {% if region == region_selected %}selected{% endif %}>{{ region }}</option>
+                    {% endfor %}
+                </select>
+                <select name="publisher" class="input-field">
+                    {% for source in news_sources %}
+                        <option value="{{ source }}" {% if source == publisher %}selected{% endif %}>{{ source }}</option>
+                    {% endfor %}
+                </select>
+                <select name="date_range" class="input-field">
+                    {% for date_option in date_options %}
+                        <option value="{{ date_option }}" {% if date_option == date_range %}selected{% endif %}>{{ date_option }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn">Search</button>
+        </form>
+
+        {% if search_warning %}
+            <div class="warning animate-slide-in">{{ search_warning }}</div>
+        {% endif %}
+        {% if search_results %}
+            <p class="text-red-700 mb-4 animate-slide-in">{{ search_results|length }} articles retrieved.</p>
+            <h3 class="section-header">📰 Articles</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                {% for article in search_results %}
+                    <div class="card animate-slide-in">
+                        <h4 class="card-title"><i class="fas fa-newspaper mr-2"></i>{{ article.title }}</h4>
+                        <p class="card-meta">Published: {{ article.published }} | Source: {{ article.source }}</p>
+                        <a href="{{ article.link }}" target="_blank" class="card-link">Read More</a>
+                    </div>
+                {% endfor %}
+            </div>
+            <h3 class="section-header">🧠 AI Summary</h3>
+            <div class="summary typewriter">{{ search_summary }}</div>
+            <h3 class="section-header">💬 Ask a Follow-Up</h3>
+            <form method="POST" class="relative">
+                <input type="hidden" name="query" value="{{ query }}">
+                <input type="hidden" name="region" value="{{ region }}">
+                <input type="hidden" name="publisher" value="{{ publisher }}">
+                <input type="hidden" name="date_range" value="{{ date_range }}">
+                <div class="relative mb-4">
+                    <input type="text" name="followup" placeholder="Ask something based on the summary" class="input-field w-full">
+                    <i class="fas fa-question-circle absolute left-3 top-1/2 transform -translate-y-1/2 text-red-700"></i>
+                </div>
+                <button type="submit" class="btn">Ask</button>
+            </form>
+            {% if followup_answer %}
+                <div class="summary typewriter"><strong>Answer:</strong> {{ followup_answer }}</div>
+            {% endif %}
+        {% endif %}
+    </section>
+    <hr class="divider">
+
+    <!-- Latest News by Source -->
+    <section id="sources" class="px-4 py-12">
+        <h2 class="section-header">🗞️ Latest News by Source</h2>
+        <form method="POST" class="mb-12">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                <select name="source_select" class="input-field">
+                    {% for source in news_sources %}
+                        <option value="{{ source }}" {% if source == source_select %}selected{% endif %}>{{ source }}</option>
+                    {% endfor %}
+                </select>
+                <select name="source_date_range" class="input-field">
+                    {% for date_option in date_options %}
+                        <option value="{{ date_option }}" {% if date_option == source_date_range %}selected{% endif %}>{{ date_option }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn">Fetch News</button>
+        </form>
+
+        {% if source_warning %}
+            <div class="warning animate-slide-in">{{ source_warning }}</div>
+        {% endif %}
+        {% if source_articles %}
+            <p class="text-red-700 mb-4 animate-slide-in">{{ source_articles|length }} articles retrieved from {{ source_select }}.</p>
+            <h3 class="section-header">📰 Latest Articles</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                {% for article in source_articles %}
+                    <div class="card animate-slide-in">
+                        <h4 class="card-title"><i class="fas fa-newspaper mr-2"></i>{{ article.title }}</h4>
+                        <p class="card-meta">Published: {{ article.published }} | Source: {{ article.source }}</p>
+                        <a href="{{ article.link }}" target="_blank" class="card-link">Read More</a>
+                    </div>
+                {% endfor %}
+            </div>
+            <h3 class="section-header">🧠 AI Summary</h3>
+            <div class="summary typewriter">{{ source_summary }}</div>
+        {% endif %}
+    </section>
+    <hr class="divider">
+
+    <!-- Global News by Category -->
+    <section id="categories" class="px-4 py-12">
+        <h2 class="section-header">🌐 Global News by Category</h2>
+        {% for category in category_data %}
+            <div class="accordion animate-slide-in">
+                <input type="checkbox" id="category-{{ loop.index }}" class="accordion-toggle">
+                <label for="category-{{ loop.index }}" class="accordion-header"><i class="fas fa-folder-open mr-2"></i>{{ category.group|join(' & ') }}</label>
+                <div class="accordion-content">
+                    <div class="summary typewriter"><strong>Summary:</strong> {{ category.summary }}</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {% for article in category.articles %}
+                            <div class="card animate-slide-in">
+                                <h4 class="card-title"><i class="fas fa-newspaper mr-2"></i>{{ article.title }}</h4>
+                                <p class="card-meta">Published: {{ article.published }} | Source: {{ article.source }}</p>
+                                <a href="{{ article.link }}" target="_blank" class="card-link">Read More</a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </section>
+{% endblock %}

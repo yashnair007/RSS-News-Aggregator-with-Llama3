@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart News Agent</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-roboto" data-theme="dark">
+    <header class="fixed top-0 left-0 w-full bg-[var(--bg-primary)] bg-opacity-90 z-50 border-b border-[var(--accent)] transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-3xl font-merriweather text-[var(--accent)]">Smart News Agent</h1>
+            <nav class="flex items-center space-x-6">
+                <a href="#highlights" class="nav-link">Highlights</a>
+                <a href="#search" class="nav-link">Search</a>
+                <a href="#sources" class="nav-link">Sources</a>
+                <a href="#categories" class="nav-link">Categories</a>
+                <button id="theme-toggle" class="text-[var(--text-primary)] hover:text-[var(--accent)] focus:outline-none">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+    <main class="pt-20">
+        {% block content %}
+        {% endblock %}
+    </main>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+</body>
+</html>
