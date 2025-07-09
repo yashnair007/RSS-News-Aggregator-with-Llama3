@@ -81,6 +81,11 @@ Each category generates a unified summary using multiple topic-specific RSS pull
 
 AI News Summarizer is designed as a fully functional and modular intelligent news dashboard. It combines real-time RSS feeds, robust country/source filtering, and high-quality LLM summaries — creating a platform that bridges raw data with intelligent synthesis. Fully deployable serverlessly and structured for extensibility, this project stands as a strong demonstration of applied LLM integration for media monitoring and analysis.
 
+## Bugs and Fixes:
+Currently, the tool is optimized primarily for desktop use, and may not render correctly on mobile devices; future updates will include enhancements for full cross-platform compatibility. Additionally, users may encounter occasional bugs in the "Follow Up" section when tracking specific topics—these issues are known and will be resolved in upcoming versions. While the current UI has been designed with clarity and functionality in mind, we understand it may not align with everyone’s preferences. Further UI enhancements and customization options are planned to improve user experience.
+
+
+
 
 
 ![App Screenshot](RSS.jpg)
