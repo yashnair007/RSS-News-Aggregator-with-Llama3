@@ -2,6 +2,7 @@
 
 **AI News Summarizer** is a serverless Flask web application that leverages Groq's LLaMA-3 model to provide intelligent, topic-wise news aggregation and summarization using real-time data from Google News RSS feeds. It integrates intelligent filtering logic for regions, publishers, and timeframes, and presents categorized summaries alongside user-driven custom query support.
 
+TRY IT HERE !!! - https://rss-1qer4rhdy-yashnair007s-projects.vercel.app
 ---
 
 ## Project Overview
